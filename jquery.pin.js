@@ -4,6 +4,7 @@
         var scrollY = 0, elements = [], disabled = false, $window = $(window);
 
         options = options || {};
+        options.top_offset = options.top_offset || 0;
 
         var recalculateLimits = function () {
             for (var i=0, len=elements.length; i<len; i++) {
@@ -29,7 +30,7 @@
                 }
 
                 $this.data("pin", {
-                    from: options.containerSelector ? containerOffset.top : offset.top,
+                    from: (options.containerSelector ? containerOffset.top : offset.top) - options.top_offset,
                     to: containerOffset.top + $container.height() - $this.outerHeight(),
                     end: containerOffset.top + $container.height(),
                     parentTop: parentOffset.top
@@ -59,13 +60,13 @@
                 if (from < scrollY && to > scrollY) {
                     !($this.css("position") == "fixed") && $this.css({
                         left: $this.offset().left,
-                        top: 0
+                        top: options.top_offset
                     }).css("position", "fixed");
                     if (options.activeClass) { $this.addClass(options.activeClass); }
                 } else if (scrollY >= to) {
                     $this.css({
                         left: "auto",
-                        top: to - data.parentTop
+                        top: to - data.parentTop + options.top_offset
                     }).css("position", "absolute");
                     if (options.activeClass) { $this.addClass(options.activeClass); }
                 } else {
